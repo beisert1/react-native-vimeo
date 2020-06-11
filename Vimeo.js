@@ -91,6 +91,12 @@ export default class Vimeo extends React.Component {
     if (handler) handler(payload.data);
   };
 
+  onNavigationStateChange(navState) {
+    if (navState.canGoBack) {
+      this.webview.goBack();
+    }
+  };
+
   onReady = () => {
     this.setState({ ready: true });
     // Defer calling `this.props.onReady`. This ensures
@@ -102,7 +108,7 @@ export default class Vimeo extends React.Component {
   render() {
     return (
       <WebView
-        ref="webviewBridge"
+        ref={(ref) => { this.webview = ref }}
         style={{
           // Accounts for player border
           marginTop: -8,
@@ -116,6 +122,7 @@ export default class Vimeo extends React.Component {
         onMessage={this.onBridgeMessage}
         onError={error => console.error(error)}
         allowsInlineMediaPlayback={true}
+        onNavigationStateChange={ this.onNavigationStateChange.bind(this) }
       />
     );
   }
